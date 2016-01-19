@@ -54,34 +54,21 @@ hover.tooltips = [
     ('Name', '@name'),
     ('Score', '@rate')
 ]
-counter = 0
-def run(new):
-    global p, patches, colors, counter
 
-    for _ in range(slider.value):
-        counter += 1
-        data = patches.data_source.data.copy()
-        rates = np.random.uniform(0, 100, size=100).tolist()
-        color = [colors[2 + int(rate / 16.667)] for rate in rates]
+pcounter = 0
+def prun():
+    global p, patches, colors, pcounter
 
-        p.title = 'Algorithms Deployed, Iteration: {}'.format(counter)
-        source.data['rate'] = rates
-        source.data['color'] = color
-        time.sleep(5)
+    pcounter += 1
 
-toggle = Toggle(label='START')
-toggle.on_click(run)
+    data = patches.data_source.data.copy()
+    rates = np.random.uniform(0, 100, size=100).tolist()
+    color = [colors[2 + int(rate / 16.667)] for rate in rates]
 
-slider = Slider(name='N iterations to advance',
-                title='N iterations to advance',
-                start=5,
-                end=10000,
-                step=5,
-                value=500)
-
-# set up layout
-toggler = HBox(toggle)
-inputs = VBox(toggler, slider)
+    p.title = 'Algorithms Deployed, Iteration: {}'.format(pcounter)
+    source.data['rate'] = rates
+    source.data['color'] = color
 
 # add to document
-curdoc().add_root(HBox(inputs))
+curdoc().add_root(p)
+curdoc().add_periodic_callback(prun, 5000)
